@@ -57,7 +57,7 @@ bool CLIParser::parse() const
         // in config file, but will not be shown to the user.
         po::options_description hidden("Hidden options");
         hidden.add_options()
-                ("input-file", po::value< vector<string> >(), "input file")
+                ("input-file", po::value< vector<string> >()->required(), "input file")
                 ;
 
 

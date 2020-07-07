@@ -54,7 +54,7 @@ bool WShuffle::write_to(const std::string &f_name, const StringList& w_list) {
 		}
 		return label;
 	};	
-	ofs << separator(n_of_ch) <<  '\n';
+	ofs << separator(n_of_ch) <<  '\n'<<'\n';
 	
 	for (const auto &fw : w_list) {
 		if (fw[0] != '>') {
@@ -62,9 +62,9 @@ bool WShuffle::write_to(const std::string &f_name, const StringList& w_list) {
 			ofs << '\n';
 		} else {
 			
-			std::string sep(repNum-1, '\n');
+			std::string sep(repNum, '\n');
 			ofs << sep;
-			ofs << separator(n_of_ch) << '\n';
+			ofs << separator(n_of_ch) << '\n' << '\n';
 		}
 	}
     return true;
