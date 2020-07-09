@@ -1,5 +1,18 @@
 {
-  "editor_name": "notepad++",
-  "editor_path": "C:\\Program Files\\Notepad++",
-  "editor_exec": "C:\\Program Files\\Notepad++\\notepad++.exe"
+  "Unix": {
+    "editors": [
+      "kate",
+      "kwrite",
+      "emacs",
+      "gedit",
+      "geany"
+    ],
+    "editor_path": "/usr/bin",
+    "editor_exec": "/usr/bin/kate"
+  },
+  "Windows": {
+    "editors": ["notepad++"],
+    "editor_path": "C:\\Program Files\\Notepad++",
+    "editor_exec": "C:\\Program Files\\Notepad++\\notepad++.exe"
+  }
 }

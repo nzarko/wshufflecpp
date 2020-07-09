@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
 	UINT oldcp = GetConsoleOutputCP();
 	SetConsoleOutputCP(CP_UTF8);
 #endif
-
+	std::cout << "Program sources : " << WSHSRC << std::endl;
+    init_app();
 	greeter();
 	systemInfo(false);
 	CLIParser cliParser(argc, argv);

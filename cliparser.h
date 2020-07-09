@@ -24,9 +24,9 @@ public:
     void set_sp_w_shuffle(const std::shared_ptr<WShuffle>& sp_w_shuffle) {
 	    spWShuffle = sp_w_shuffle;
     }
-
+#ifdef _MSC_VER
     __declspec(property(get = sp_w_shuffle, put = set_sp_w_shuffle)) std::shared_ptr<WShuffle> SpWShuffle;
-	
+#endif
     CLIParser(int argc, char *argv[]);
     bool parse() const;
     virtual ~CLIParser();

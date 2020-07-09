@@ -27,16 +27,57 @@ namespace WShuffleUtils {
 
 	std::string to_string(const std::wstring& wstr);
 
+	/**
+	 * Count the actual characters of the string
+	 * @param utf8_string
+	 * @return How many characters the string has.
+	 */
 	size_t count_chars(const std::string utf8_string);
 
+	/**
+	 * Create a file name (path) to store the output
+	 * @param f_in The input file
+	 * @param f_out The file (path) to be created
+	 * @return true if the creation go well, false if not.
+	 */
 	bool create_out_file(const std::string &f_in, std::string &f_out);
     bool create_out_file_list(const VStrList &in_list, VStrList &out_list);
 
 	void show_info(const std::string &message, const StringList &lst);
 	void show_info(const std::string &message, const SizeMap &sm);
 
+	/**
+	 * Print an question or error message and waits for the answer
+	 * @param error_message The message to print
+	 * @return True or False depending to the answer.
+	 */
 	bool is_ok_to_continue(const std::string &error_message);
+	/**
+	 * Get the application directory. If it doesn't exist it will try to create it.
+	 * This is platform dependent. In Linux systems it is $HOME/.local/wshuffle
+	 * In windows it is ...
+	 * @return The application settings directory.
+	 */
+    std::string get_settings_dir();
 
+    /**
+     * Makes the proper initializations
+     */
+    void init_app();
+
+    /**
+     * Returns the full path of the file prepending the settings directory path
+     * @param filename
+     * @return The full path of setting file
+     */
+    std::string settings_file_path(const std::string &filename);
+
+
+    /**
+     * Shuffle the list lst
+     * @tparam T The type of elemetns of the list
+     * @param lst The list to shuffle.
+     */
 	template < typename T > void shuffle(std::list<T>& lst) // shuffle contents of a list
 	{
 		// create a vector of (wrapped) references to elements in the list

@@ -2,7 +2,12 @@
 #define SHUFFLERBASE_H
 
 #include "ishufflerbase.h"
+#ifdef _MSC_VER
 #include "wineditor.h"
+#elif defined(__GNUC__)
+#include "posixeditor.h"
+#endif
+
 using namespace WShuffleUtils;
 
 
@@ -36,8 +41,10 @@ public:
 	virtual void set_shuffle(const bool shuffle) {
 		shuffle_ = shuffle;
 	}
-
+#ifdef _MSC_VER
 	__declspec(property(get = shuffle, put = set_shuffle)) bool Shuffle;
+    __declspec(property(get = sp_editor, put = set_sp_editor)) std::shared_ptr<Editor> SpEditor;
+#endif
 
     virtual std::shared_ptr<Editor>& sp_editor()     {
 	    return spEditor;
@@ -46,8 +53,6 @@ public:
     virtual void set_sp_editor(const std::shared_ptr<Editor>& sp_editor) {
 	    spEditor = sp_editor;
     }
-
-    __declspec(property(get = sp_editor, put = set_sp_editor)) std::shared_ptr<Editor> SpEditor;
 
     const VStrList &getFileOut() const;
 	

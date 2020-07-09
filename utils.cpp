@@ -128,6 +128,41 @@ namespace WShuffleUtils
 		return false;
 	}
 
+    std::string get_settings_dir() {
+	    namespace fs = boost::filesystem;
+	    auto user_dir = fs::path(getenv("HOME"));
+	    auto settings_dir = user_dir += fs::path("/.local/share/wshuffle");
+	    //std::cout << "Posible settings dir : " << settings_dir.string() << '\n';
+	    if (!fs::is_directory(settings_dir)) {
+	        fs::create_directory(settings_dir);
+	        std::cout << "Settings directory created succesfully : " << settings_dir.string() << '\n';
+	    }
+	    //std::cout << "Settings directory : " << fs::canonical(settings_dir).string() << std::endl;
+        return fs::canonical(settings_dir).string();
+    }
+
+    void init_app() {
+        namespace fs = boost::filesystem;
+	    auto settings_p = get_settings_dir();
+	    std::vector<std::string> cfg_files = {"editor.json", "wshuffle.cfg"};
+	    for(auto &x : cfg_files) {
+	        fs::path p(settings_p + "/"+x);
+	        if (!fs::exists(p)){
+	            std::string src_path = WSHSRC;
+	            src_path += "/" + x;
+                fs::copy_file(fs::path( src_path),fs::path(p));
+	        }
+	    }
+    }
+
+    std::string settings_file_path(const std::string &filename) {
+	    namespace fs = boost::filesystem;
+	    fs::path p(get_settings_dir() + "/" + filename);
+	    //std::cout << fs::canonical(p).string() << std::endl;
+        return fs::canonical(p).string();
+    }
+
+
 #ifdef _WIN32
 #include <Windows.h>
 #include  <ntstatus.h>

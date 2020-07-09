@@ -10,7 +10,7 @@ WShuffle::WShuffle(const VStrList & filenames, int repetitions, int linesbetween
     linesbtw(linesbetween)
 {
     file_out.resize(file_in.size(), "");
-	spEditor = std::make_shared<WinEditor>("Editor", "settings.json");
+	spEditor = create_editor();
 }
 
 WShuffle::~WShuffle()
@@ -33,9 +33,11 @@ bool WShuffle::write_to(const std::string &f_name, const StringList& w_list) {
 	std::ofstream ofs(f_name);
 	if (!ofs.is_open())
 	{
-		std::cout << "Error reading " << f_name << std::endl;
+		std::cout << "Error writing " << f_name << std::endl;
 		return false;
 	}
+
+	std::cout << "Writing to file : " << f_name << '\n';
 
 	size_t bn = 1;
 	const size_t n_of_ch = count_chars(w_list.front());
@@ -90,8 +92,8 @@ void WShuffle::format(const SizeMap & in_list, StringList & out_list)
 		std::max_element(in_list.begin(), in_list.end(),
 			[](const std::pair<std::string, size_t> &a, const std::pair<std::string, size_t> &b) -> bool { return a.second < b.second; });
 
-	std::cout << "String with max size : " << '\n';
-	std::cout << p_max_size->first << " , " << p_max_size->second << "\n";
+//	std::cout << "String with max size : " << '\n';
+//	std::cout << p_max_size->first << " , " << p_max_size->second << "\n";
 
 	std::string equalto = "->_______________________";
 	std::transform(in_list.begin(), in_list.end(), std::back_inserter(out_list),
@@ -162,10 +164,10 @@ int WShuffle::exec()
 		//Success. Push it back in production files
 		real_file_input.push_back(fn);
 		get_size_map(w_list_, s_map_);
-		show_info(fn + " contents : ", s_map_);
+		//show_info(fn + " contents : ", s_map_);
 		StringList out_list;
 		format(s_map_, out_list);
-		show_info("Formatted translations :", out_list);
+		//show_info("Formatted translations :", out_list);
 		
 		std::string out_filename;
 		create_out_file(fn, out_filename);
@@ -201,6 +203,8 @@ bool WShuffle::read_from(const std::string & f_name, StringList & w_list)
 		std::cout << "Error reading " << f_name << std::endl;
 		return false;
 	}
+	std::cout << "Reading file " << f_name << '\n';
+
 	std::string line;
 	while (std::getline(ifs, line))
 	{

@@ -9,8 +9,8 @@
 CLIParser::CLIParser(int argc, char **argv):
         _argc(argc), _argv(argv)
 {
-    std::cout << "Number of arguments : " << _argc << '\n';
-    std::cout << "Arguments : " << args() << std::endl;
+    //std::cout << "Number of arguments : " << _argc << '\n';
+    //std::cout << "Arguments : " << args() << std::endl;
     WShuffleUtils::VStrList input_file_list;
     spWShuffle = std::make_shared<WShuffle>(input_file_list, 3, 5);
 }
@@ -78,7 +78,7 @@ bool CLIParser::parse() const
                 options(cmdline_options).positional(p).run(), vm);
         notify(vm);
 
-        ifstream ifs(config_file.c_str());
+        ifstream ifs(settings_file_path(config_file.c_str()));
         if (!ifs)
         {
             cout << "can not open config file: " << config_file << "\n";
@@ -102,45 +102,45 @@ bool CLIParser::parse() const
 
         if (vm.count("include-path"))
         {
-            cout << "Include paths are: "
-                 << vm["include-path"].as< vector<string> >() << "\n";
+//            cout << "Include paths are: "
+//                 << vm["include-path"].as< vector<string> >() << "\n";
         }
 
         if(vm.count("repetitions")) {
-            cout << "Repetitions are : " << vm["repetitions"].as<int>() << '\n';
+            //cout << "Repetitions are : " << vm["repetitions"].as<int>() << '\n';
             spWShuffle->setRepetitions(vm["repetitions"].as<int>());
         }
 
         if(vm.count("between")) {
-            cout << "Lines between blocks are : " << vm["between"].as<int>() << '\n';
+            //cout << "Lines between blocks are : " << vm["between"].as<int>() << '\n';
             spWShuffle->setLinesBetween(vm["between"].as<int>());
         }
 
 
         if (vm.count("input-file"))
         {
-            cout << "Input files are: " << '\n'
-                 << vm["input-file"].as< vector<string> >() << "\n";
+//            cout << "Input files are: " << '\n'
+//                 << vm["input-file"].as< vector<string> >() << "\n";
             spWShuffle->setFilenames(vm["input-file"].as< vector<string> >());
-            cout << "Output files are : \n" << spWShuffle->getFileOut() << std::endl;
-			cout << "Editor outfiles are : \n" << spWShuffle->SpEditor->Arguments;
+            //cout << "Output files are : \n" << spWShuffle->getFileOut() << std::endl;
+			//cout << "Editor outfiles are : \n" << spWShuffle->sp_editor()->arguments();
         }
 
-        cout << "Optimization level is " << opt << "\n";
-        cout << "Between is :" << between << "\n";
+        //cout << "Optimization level is " << opt << "\n";
+        //cout << "Between is :" << between << "\n";
 		spWShuffle->setLinesBetween(between);
-        cout << "Repetitions are : " << repetitions << "\n";
+        //cout << "Repetitions are : " << repetitions << "\n";
 		spWShuffle->setRepetitions(repetitions);
         if(vm.count("ns")) {
 			shuffle = vm["ns"].as<bool>();
-            if (shuffle)
-                cout << "\"No Shuffle (--ns )\" has been set" << "\n";
-            else {
-                cout << "\"No Shuffle (--ns )\" has not been set" << "\n";
-            }
+//            if (shuffle)
+//                cout << "\"No Shuffle (--ns )\" has been set" << "\n";
+//            else {
+//                cout << "\"No Shuffle (--ns )\" has not been set" << "\n";
+//            }
 			spWShuffle->set_shuffle(shuffle);
         }
-        cout << spWShuffle->__str();
+        //cout << spWShuffle->__str();
 		//spWShuffle->SpEditor->launch();
     	
     	return true;

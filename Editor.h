@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "utils.hpp"
+
 #include <boost/process.hpp> 
 #include <boost/assign/list_of.hpp> 
 
@@ -24,14 +25,15 @@ public:
 		argumens_ = parameters;
 	}
 
-	__declspec(property(get = arguments, put = set_arguments)) VStrList Arguments;
-
 	virtual std::map<std::string, std::string> &settings()
 	{
 		return settings_;
 	}
 
+#ifdef _MSVC_VER
 	__declspec(property(get = settings)) std::map<std::string, std::string> Settings;
+	__declspec(property(get = arguments, put = set_arguments)) VStrList Arguments;
+#endif
 	virtual ~Editor() = default;
 
 	virtual std::string editor_name() const
