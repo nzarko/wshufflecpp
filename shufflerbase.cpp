@@ -80,12 +80,59 @@ bool WShuffle::write_to(const VStrList &file_list) {
     return false;
 }
 
+/***
+ * Format the contents of the in_list in the out_list. The output is
+ * as inserted.
+ */
 void WShuffle::format_(const StringList& str_list, StringList& out_list)
 {
 	get_size_map(str_list, s_map_);
-	format(s_map_, out_list);
+	SizeMap::const_iterator p_max_size =
+		std::max_element(s_map_.begin(), s_map_.end(),
+			[](const std::pair<std::string, size_t> &a, const std::pair<std::string, size_t> &b) -> bool { return a.second < b.second; });
+	//format(s_map_, out_list);
+
+	std::string equalto = "->_______________________";
+	std::transform(str_list.begin(), str_list.end(), std::back_inserter(out_list),
+		[p_max_size, equalto](const std::string &in_str) -> std::string {
+		std::string res;
+		res += in_str;
+		for (int i = 0; i < p_max_size->second - count_chars(in_str) + 2; i++) {
+			res += ".";
+		}
+		res += equalto;
+		return res;
+	});
+
+	std::string sep = ">>>>SEPARATOR<<<<";
+	if (!shuffle_) {
+		///TODO : shuffle the formatted list repNum times and add the result at the the end.
+		///
+		StringList help_list = { out_list.begin(), out_list.end() };
+		WShuffleUtils::shuffle(help_list);
+		out_list.assign(help_list.begin(), help_list.end());
+		out_list.push_back(sep);
+		for (int i = 1; i < repNum; i++) {
+			WShuffleUtils::shuffle(help_list);
+			out_list.insert(out_list.end(), help_list.begin(), help_list.end());
+			out_list.push_back(sep);
+		}
+	}
+	else {
+		///TODO : Add repNum copies of the formatted list at end of it.
+		out_list.push_back(sep);
+		StringList help_list = { out_list.begin(), out_list.end() };
+		for (int i = 1; i <= repNum - 1; i++) {
+			out_list.insert(out_list.end(), help_list.begin(), help_list.end());
+		}
+	}
+	out_list.pop_back();
 }
 
+/**
+ * Format the contents of the in_list in the out_list. The output is
+ * ordered (alphabetically).
+ */
 void WShuffle::format(const SizeMap & in_list, StringList & out_list)
 {
 	SizeMap::const_iterator p_max_size =
@@ -136,6 +183,7 @@ void WShuffle::format(const SizeMap & in_list, StringList & out_list)
 	out_list.pop_back();
 }
 
+
 void WShuffle::get_size_map(const StringList & w_list, SizeMap & s_map)
 {
 	if (!s_map.empty()) {
@@ -166,7 +214,7 @@ int WShuffle::exec()
 		get_size_map(w_list_, s_map_);
 		//show_info(fn + " contents : ", s_map_);
 		StringList out_list;
-		format(s_map_, out_list);
+		format_(w_list_, out_list);
 		//show_info("Formatted translations :", out_list);
 		
 		std::string out_filename;

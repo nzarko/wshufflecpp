@@ -3,6 +3,11 @@
 #include <iostream>
 #include  <numeric>
 
+#ifdef _MSC_VER
+#include <ShlObj.h>
+#endif
+
+
 namespace WShuffleUtils
 {
 	using convert_t = std::codecvt_utf8<wchar_t>;
@@ -129,10 +134,23 @@ namespace WShuffleUtils
 	}
 
     std::string get_settings_dir() {
-	    namespace fs = boost::filesystem;
+		namespace fs = boost::filesystem;
+#ifdef _MSC_VER
+		char data_path[MAX_PATH];
+		std::string s_dir;
+		if (SHGetSpecialFolderPathA(nullptr, data_path, CSIDL_APPDATA, false)) {
+			s_dir = std::string(data_path);
+			s_dir += R"(\AlgAnalytics\wshuffle)";
+		}
+		else {
+			s_dir = R"(C:\Users\nzark\AppData\Roaming\AlgAnalytics\wshuffle)";
+		}
+		auto settings_dir = fs::path(s_dir);
+#else
 	    auto user_dir = fs::path(getenv("HOME"));
 	    auto settings_dir = user_dir += fs::path("/.local/share/wshuffle");
 	    //std::cout << "Posible settings dir : " << settings_dir.string() << '\n';
+#endif
 	    if (!fs::is_directory(settings_dir)) {
 	        fs::create_directory(settings_dir);
 	        std::cout << "Settings directory created succesfully : " << settings_dir.string() << '\n';
@@ -143,13 +161,19 @@ namespace WShuffleUtils
 
     void init_app() {
         namespace fs = boost::filesystem;
+		std::string sep;
+#ifdef _MSC_VER
+		sep = "\\";
+#else
+		sep = "/";
+#endif
 	    auto settings_p = get_settings_dir();
 	    std::vector<std::string> cfg_files = {"editor.json", "wshuffle.cfg"};
 	    for(auto &x : cfg_files) {
-	        fs::path p(settings_p + "/"+x);
+	        fs::path p(settings_p + sep +x);
 	        if (!fs::exists(p)){
 	            std::string src_path = WSHSRC;
-	            src_path += "/" + x;
+	            src_path += sep + x;
                 fs::copy_file(fs::path( src_path),fs::path(p));
 	        }
 	    }
